@@ -14,11 +14,11 @@ public class Main {
     public static void main(String[] argc){
 
 
-        VkConnectionParams params = new VkConnectionParams("5002202", "hVbAID9O0ELN83zYmoaI", "4070ad9125b560318ddb284ce5323dcf2c53a7afd32eee8553dbbcd467eda514703dfcb6d9fc2634ed0ec");
+        VkConnectionParams params = new VkConnectionParams("5002202", "hVbAID9O0ELN83zYmoaI", "ad08d664aa790755d72f29e13bd7323b821d8765b7381fe4f72c943708ebc7429fcdb03a7292bf9a834b9");
 
         VK vkAPI = new VK(params);
 
-        Statistics statistics = new Statistics(vkAPI, "che_kiev");
+        Statistics statistics = new Statistics(vkAPI, "che_kiev", "-70085164");
 
         statistics.getMostActiveHitchhiker();
 

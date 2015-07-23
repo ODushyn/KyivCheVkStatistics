@@ -1,6 +1,8 @@
 package odushyn.kyivche.publisher.utils;
 
+import odushyn.kyivche.publisher.covertor.WallMessageConvertor;
 import odushyn.kyivche.publisher.domain.VkRequest;
+import odushyn.kyivche.publisher.domain.message.WallComment;
 import odushyn.kyivche.publisher.domain.message.WallMessage;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -8,6 +10,10 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.commons.io.IOUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -26,6 +32,7 @@ public class VK implements VkInterface {
 
     //methods
     public static final String VK_WALL_GET = "/method/wall.get";
+    public static final String VK_GET_COMMENTS = "/method/wall.getComments";
 
     public VK(VkConnectionParams connection) {
         this.connParams = connection;
@@ -33,45 +40,27 @@ public class VK implements VkInterface {
 
     @Override
     public List<WallMessage> getWallMessages(Map<String, String> paramsMap) {
-        List<WallMessage> wallMessages = new ArrayList<WallMessage>();
+        List<WallMessage> wallMessages;
 
         URI uri = vkURIBuilder(new VkRequest(VK_WALL_GET, paramsMap));
-
         HttpResponse response = makeRequest(uri);
+        JSONArray json = convertResponseToJSON(response);
 
-        StringWriter content = new StringWriter();
-
-        try {
-            IOUtils.copy(response.getEntity().getContent(), content);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(-1);
-        }
-        System.out.println(content.toString());
+        wallMessages = new WallMessageConvertor().convert(json);
 
         return wallMessages;
     }
 
-    /*private URI getWallMessages(String userName, String count){
+    @Override
+    public List<WallComment> getComments(Map<String, String> paramsMap) {
+        List<WallComment> comments = new ArrayList<WallComment>();
 
-        URI uri = null;
-        try {
-            URIBuilder uriBuilder = new URIBuilder();
-            uriBuilder.setScheme(connParams.getScheme()).setHost(connParams.getHost())
-                    .setPath(VK_WALL_GET)
-                    .setParameter("domain", userName)
-                    .setParameter("copy_history_depth", count);
-            if(connParams.getAccessToken() != null) {
-                uriBuilder.setParameter("access_token", "1bf4c6df671efd8e62a6671f6542ed13a35592d2a37a4ab5433d9c7d9201c49db2bfba134494624504967");
-            }
-            uri = uriBuilder.build();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-            System.exit(-1);
-        }
+        URI uri = vkURIBuilder(new VkRequest(VK_GET_COMMENTS, paramsMap));
+        HttpResponse response = makeRequest(uri);
+        JSONArray json = convertResponseToJSON(response);
 
-        return uri;
-    }*/
+        return comments;
+    }
 
     private HttpResponse makeRequest(URI uri){
 
@@ -87,6 +76,33 @@ public class VK implements VkInterface {
         }
 
         return response;
+    }
+
+    private JSONArray convertResponseToJSON(HttpResponse response){
+        StringWriter content = new StringWriter();
+
+        try {
+            IOUtils.copy(response.getEntity().getContent(), content);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
+
+        JSONParser parser   = new JSONParser();
+        JSONArray postsList = null;
+
+        try {
+
+            JSONObject jsonResp  = (JSONObject) parser.parse(content.toString());
+            postsList = (JSONArray) jsonResp.get("response");
+            JSONObject unicPost  = null;
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
+
+        return postsList;
     }
 
     private URI vkURIBuilder(VkRequest request){
