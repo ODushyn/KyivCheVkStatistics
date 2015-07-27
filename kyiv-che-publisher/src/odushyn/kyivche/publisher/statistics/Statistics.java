@@ -4,6 +4,7 @@ import odushyn.kyivche.publisher.domain.message.Comment;
 import odushyn.kyivche.publisher.domain.message.WallMessage;
 import odushyn.kyivche.publisher.utils.VK;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,9 +27,9 @@ public class Statistics {
 
     public void getMostActiveHitchhiker()  {
 
-        List<WallMessage> wallMessages = getWallMessages();
+        List<WallMsgCheKievWrapper> wallMessages = getWallMessages();
 
-        Map<WallMessage, List<Comment>> msgCommentMap = getComments(wallMessages);
+        Map<WallMsgCheKievWrapper, List<Comment>> msgCommentMap = getComments(wallMessages);
 
         System.out.println("Success!!!");
     }
@@ -37,26 +38,37 @@ public class Statistics {
 
     }
 
-    private List<WallMessage> getWallMessages(){
+    private List<WallMsgCheKievWrapper> getWallMessages(){
+        List<WallMsgCheKievWrapper> wrappedList = new ArrayList<WallMsgCheKievWrapper>();
         Map<String, String> getWallMethodParams = new HashMap<String, String>();
         getWallMethodParams.put("domain", groupName);
         getWallMethodParams.put("count", ROWS_COUNT);
 
-        return vk.getWallMessages(getWallMethodParams);
+        for(WallMessage msg : vk.getWallMessages(getWallMethodParams)){
+            wrappedList.add(new WallMsgCheKievWrapper(msg));
+        }
+
+        return wrappedList;
     }
 
-    private Map<WallMessage, List<Comment>> getComments(List<WallMessage> wallMessages){
-        Map<WallMessage, List<Comment>> msgCommentMap = new HashMap<WallMessage, List<Comment>>();
+    private Map<WallMsgCheKievWrapper, List<Comment>> getComments(List<WallMsgCheKievWrapper> wallMessages){
+        Map<WallMsgCheKievWrapper, List<Comment>> msgCommentMap = new HashMap<WallMsgCheKievWrapper, List<Comment>>();
 
         Map<String, String> getCommentParams = new HashMap<String, String>();
         getCommentParams.put("owner_id", groupId);
         getCommentParams.put("need_likes", "1");
-        for(WallMessage wallMsg : wallMessages){
-            getCommentParams.put("post_id", wallMsg.getId());
-            msgCommentMap.put(wallMsg, vk.getComments(getCommentParams));
+        for(WallMsgCheKievWrapper wrappedMsg : wallMessages){
+            getCommentParams.put("post_id", wrappedMsg.getWallMessage().getId());
+            msgCommentMap.put(wrappedMsg, vk.getComments(getCommentParams));
         }
 
         return msgCommentMap;
+    }
+
+    private StatisticParams calculateMainParams(){
+        StatisticParams params = new StatisticParams();
+
+        return params;
     }
 
 }
