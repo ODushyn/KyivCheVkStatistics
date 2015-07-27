@@ -5,7 +5,7 @@ import odushyn.kyivche.publisher.domain.message.WallMessage;
 /**
  * Created by Oleksander.Dushyn on 7/27/2015.
  */
-public class WallMsgCheKievWrapper{
+public class WallMsgCheKyivWrapper {
 
     private String dateOfTrip;
     private String type;
@@ -13,7 +13,7 @@ public class WallMsgCheKievWrapper{
     private String toCity;
     private WallMessage wallMessage;
 
-    public WallMsgCheKievWrapper(WallMessage wallMessage) {
+    public WallMsgCheKyivWrapper(WallMessage wallMessage) {
         this.wallMessage = wallMessage;
         String[] text = wallMessage.getText().split(" ");
         if(text.length < 5){
