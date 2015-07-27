@@ -13,10 +13,14 @@ import java.util.List;
 /**
  * Created by Oleksander.Dushyn on 7/23/2015.
  */
-public class WallMessageConvertor implements Convertor {
+public class WallMessageConvertor extends Convertor {
 
     @Override
     public List<WallMessage> convert(JSONArray json) {
+        if(json == null){
+            return null;
+        }
+
         List<WallMessage> list = new ArrayList<WallMessage>();
 
         for (int i=1; i < json.size(); i++) {
@@ -27,9 +31,7 @@ public class WallMessageConvertor implements Convertor {
             msg.setText(jsonObject.get("text").toString());
             msg.setLikes(jsonObject.get("likes").toString());
 
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(Long.valueOf(jsonObject.get("date").toString()));
-            msg.setPostDate(calendar.getTime());
+            msg.setPostDate(convertDate(jsonObject.get("date").toString()));
 
             if(jsonObject.get("copy_owner_id") != null) {
                 msg.setOwnerId(jsonObject.get("copy_owner_id").toString());

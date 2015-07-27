@@ -1,5 +1,6 @@
 package odushyn.kyivche.publisher.statistics;
 
+import odushyn.kyivche.publisher.domain.message.Comment;
 import odushyn.kyivche.publisher.domain.message.WallMessage;
 import odushyn.kyivche.publisher.utils.VK;
 
@@ -24,23 +25,38 @@ public class Statistics {
     }
 
     public void getMostActiveHitchhiker()  {
-        Map<String, String> getWallMethodParams = new HashMap<String, String>();
-        getWallMethodParams.put("domain", groupName);
-        getWallMethodParams.put("count", ROWS_COUNT);
 
-        List<WallMessage> wallMessages = vk.getWallMessages(getWallMethodParams);
+        List<WallMessage> wallMessages = getWallMessages();
 
-        Map<String, String> getCommentParams = new HashMap<String, String>();
-        getCommentParams.put("owner_id", groupId);
+        Map<WallMessage, List<Comment>> msgCommentMap = getComments(wallMessages);
 
-        for(WallMessage wallMsg : wallMessages){
-            getCommentParams.put("post_id", wallMsg.getId());
-            vk.getComments(getCommentParams);
-        }
+        System.out.println("Success!!!");
     }
 
     public void getMostActiveDriver(){
 
+    }
+
+    private List<WallMessage> getWallMessages(){
+        Map<String, String> getWallMethodParams = new HashMap<String, String>();
+        getWallMethodParams.put("domain", groupName);
+        getWallMethodParams.put("count", ROWS_COUNT);
+
+        return vk.getWallMessages(getWallMethodParams);
+    }
+
+    private Map<WallMessage, List<Comment>> getComments(List<WallMessage> wallMessages){
+        Map<WallMessage, List<Comment>> msgCommentMap = new HashMap<WallMessage, List<Comment>>();
+
+        Map<String, String> getCommentParams = new HashMap<String, String>();
+        getCommentParams.put("owner_id", groupId);
+        getCommentParams.put("need_likes", "1");
+        for(WallMessage wallMsg : wallMessages){
+            getCommentParams.put("post_id", wallMsg.getId());
+            msgCommentMap.put(wallMsg, vk.getComments(getCommentParams));
+        }
+
+        return msgCommentMap;
     }
 
 }

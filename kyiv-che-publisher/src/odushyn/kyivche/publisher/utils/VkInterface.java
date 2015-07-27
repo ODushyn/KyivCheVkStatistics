@@ -1,6 +1,6 @@
 package odushyn.kyivche.publisher.utils;
 
-import odushyn.kyivche.publisher.domain.message.WallComment;
+import odushyn.kyivche.publisher.domain.message.Comment;
 import odushyn.kyivche.publisher.domain.message.WallMessage;
 
 import java.util.List;
@@ -13,5 +13,5 @@ public interface VkInterface {
 
     List<WallMessage> getWallMessages(Map<String, String> paramsMap);
 
-    List<WallComment> getComments(Map<String, String> paramsMap);
+    List<Comment> getComments(Map<String, String> paramsMap);
 }

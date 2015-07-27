@@ -1,8 +1,9 @@
 package odushyn.kyivche.publisher.utils;
 
+import odushyn.kyivche.publisher.covertor.CommentConvertor;
 import odushyn.kyivche.publisher.covertor.WallMessageConvertor;
 import odushyn.kyivche.publisher.domain.VkRequest;
-import odushyn.kyivche.publisher.domain.message.WallComment;
+import odushyn.kyivche.publisher.domain.message.Comment;
 import odushyn.kyivche.publisher.domain.message.WallMessage;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -52,12 +53,14 @@ public class VK implements VkInterface {
     }
 
     @Override
-    public List<WallComment> getComments(Map<String, String> paramsMap) {
-        List<WallComment> comments = new ArrayList<WallComment>();
+    public List<Comment> getComments(Map<String, String> paramsMap) {
+        List<Comment> comments = new ArrayList<Comment>();
 
         URI uri = vkURIBuilder(new VkRequest(VK_GET_COMMENTS, paramsMap));
         HttpResponse response = makeRequest(uri);
         JSONArray json = convertResponseToJSON(response);
+
+        comments = new CommentConvertor().convert(json);
 
         return comments;
     }
@@ -95,7 +98,6 @@ public class VK implements VkInterface {
 
             JSONObject jsonResp  = (JSONObject) parser.parse(content.toString());
             postsList = (JSONArray) jsonResp.get("response");
-            JSONObject unicPost  = null;
 
         } catch (ParseException e) {
             e.printStackTrace();
