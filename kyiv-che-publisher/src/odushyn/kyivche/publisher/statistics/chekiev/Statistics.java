@@ -3,11 +3,10 @@ package odushyn.kyivche.publisher.statistics.chekiev;
 
 import odushyn.kyivche.publisher.domain.message.Comment;
 import odushyn.kyivche.publisher.domain.message.WallMessage;
-import odushyn.kyivche.publisher.statistics.chekiev.domain.Trips;
+import odushyn.kyivche.publisher.statistics.chekiev.domain.TripType;
+import odushyn.kyivche.publisher.statistics.chekiev.domain.TripDirections;
 import odushyn.kyivche.publisher.utils.VK;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -15,10 +14,7 @@ import java.util.*;
  */
 public class Statistics {
 
-    private final static String KYIV = "Киев";
-    private final static String CHE = "Чернигов";
-    private final static String HITCHHIKER = "Попутчики";
-    private final static String DRIVERS = "Подвезу";
+
     private final static String ROWS_COUNT = "50";
     private VK vk;
     private String groupName;
@@ -75,35 +71,17 @@ public class Statistics {
     private StatisticParams calculateMainParams(Map<WallMsgCheKyivWrapper, List<Comment>> map){
         StatisticParams params = new StatisticParams();
 
-        Trips trips = createTrips(map);
+        TripDirections tripDirection = createTrips(map);
 
 
         return params;
     }
 
-    private Trips createTrips(Map<WallMsgCheKyivWrapper, List<Comment>> map){
-        Trips trips = new Trips();
+    private TripDirections createTrips(Map<WallMsgCheKyivWrapper, List<Comment>> map){
+        TripDirections trips = new TripDirections();
 
         for(Map.Entry<WallMsgCheKyivWrapper, List<Comment>> item: map.entrySet()){
-
-            if(KYIV.equals(item.getKey().getFromCity())){
-                if(DRIVERS.equals(item.getKey().getType())) {
-                    trips.getKyivChe().setDrivers(item.getValue());
-                }else if(HITCHHIKER.equals(item.getKey().getType())) {
-                    trips.getKyivChe().setHitchihiker(item.getValue());
-                }
-                trips.getKyivChe().setDateOfTrip(convertDate(item.getKey().getDateOfTrip()));
-            }else{
-                if(CHE.equals(item.getKey().getFromCity())){
-                    if(DRIVERS.equals(item.getKey().getType())) {
-                        trips.getCheKyiv().setDrivers(item.getValue());
-                    }else if(HITCHHIKER.equals(item.getKey().getType())) {
-                        trips.getCheKyiv().setHitchihiker(item.getValue());
-                    }
-                    trips.getCheKyiv().setDateOfTrip(convertDate(item.getKey().getDateOfTrip()));
-
-                }
-            }
+            trips.addUsers(item.getKey(), item.getValue());
         }
 
 
