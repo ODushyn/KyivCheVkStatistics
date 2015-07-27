@@ -1,4 +1,4 @@
-package odushyn.kyivche.publisher.statistics;
+package odushyn.kyivche.publisher.statistics.chekiev;
 
 import odushyn.kyivche.publisher.domain.message.Comment;
 import odushyn.kyivche.publisher.domain.message.WallMessage;
@@ -14,6 +14,8 @@ import java.util.Map;
  */
 public class Statistics {
 
+    private final static String HITCHHIKER = "Попутчики";
+    private final static String DRIVERS = "Подвезу";
     private final static String ROWS_COUNT = "100";
     private VK vk;
     private String groupName;
@@ -65,8 +67,13 @@ public class Statistics {
         return msgCommentMap;
     }
 
-    private StatisticParams calculateMainParams(){
+    private StatisticParams calculateMainParams(Map<WallMsgCheKievWrapper, List<Comment>> map){
         StatisticParams params = new StatisticParams();
+
+
+        for(Map.Entry<WallMsgCheKievWrapper, List<Comment>> item: map.entrySet()){
+
+        }
 
         return params;
     }

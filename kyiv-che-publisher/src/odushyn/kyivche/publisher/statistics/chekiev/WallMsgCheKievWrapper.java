@@ -1,4 +1,4 @@
-package odushyn.kyivche.publisher.statistics;
+package odushyn.kyivche.publisher.statistics.chekiev;
 
 import odushyn.kyivche.publisher.domain.message.WallMessage;
 

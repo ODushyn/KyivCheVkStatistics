@@ -1,7 +1,7 @@
 package odushyn.kyivche.publisher.main;
 
 
-import odushyn.kyivche.publisher.statistics.Statistics;
+import odushyn.kyivche.publisher.statistics.chekiev.Statistics;
 import odushyn.kyivche.publisher.utils.VK;
 import odushyn.kyivche.publisher.utils.VkConnectionParams;
 
