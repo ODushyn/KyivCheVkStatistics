@@ -4,6 +4,8 @@ import odushyn.kyivche.publisher.domain.message.Comment;
 import odushyn.kyivche.publisher.statistics.chekiev.WallMsgCheKyivWrapper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -40,4 +42,8 @@ public class TripDirections {
         this.kyivChe = kyivChe;
     }
 
+    public void sort(){
+        Collections.sort(this.cheKyiv, new TripsSortByDateAndType());
+        Collections.sort(this.kyivChe, new TripsSortByDateAndType());
+    }
 }

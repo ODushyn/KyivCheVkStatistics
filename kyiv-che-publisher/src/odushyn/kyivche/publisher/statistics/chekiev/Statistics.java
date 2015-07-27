@@ -73,27 +73,16 @@ public class Statistics {
 
         TripDirections tripDirection = createTrips(map);
 
+        tripDirection.sort();
 
         return params;
     }
 
     private TripDirections createTrips(Map<WallMsgCheKyivWrapper, List<Comment>> map){
         TripDirections trips = new TripDirections();
-
         for(Map.Entry<WallMsgCheKyivWrapper, List<Comment>> item: map.entrySet()){
             trips.addUsers(item.getKey(), item.getValue());
         }
-
-
         return trips;
     }
-
-    private Date convertDate(String dateToConvert){
-        String[] splitDate = dateToConvert.split("\\.");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2015, Integer.valueOf(splitDate[1]), Integer.valueOf(splitDate[0]));
-
-        return cal.getTime();
-    }
-
 }

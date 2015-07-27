@@ -33,10 +33,20 @@ public class TripType {
     private Date convertDate(String dateToConvert){
         String[] splitDate = dateToConvert.split("\\.");
         Calendar cal = Calendar.getInstance();
-        cal.set(2015, Integer.valueOf(splitDate[1]) - 1, Integer.valueOf(splitDate[0]));
+        cal.set(cal.get(Calendar.YEAR), Integer.valueOf(splitDate[1]) - 1, Integer.valueOf(splitDate[0]));
 
         return cal.getTime();
     }
 
+    public Date getDateOfTrip() {
+        return dateOfTrip;
+    }
 
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public List<Comment> getUsers() {
+        return users;
+    }
 }
